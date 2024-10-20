@@ -1,0 +1,171 @@
+{
+  "tools": [
+    {
+      "name": "test_123",
+      "source": null,
+      "alias": null,
+      "description": "Prints pandas {name}!",
+      "type": "docker",
+      "content": "\ncurl -LsSf https://astral.sh/uv/install.sh | sh > /dev/null 2>&1\n. $HOME/.cargo/env\n\nuv venv > /dev/null 2>&1\n. .venv/bin/activate > /dev/null 2>&1\n\nuv pip install -r /tmp/requirements.txt > /dev/null 2>&1\n\npython /tmp/main.py \"{{ .name }}\" \"{{ .boolean_val }}\" \"{{ .optional_str }}\"\n",
+      "content_url": null,
+      "args": [
+        {
+          "name": "name",
+          "type": null,
+          "description": "Input param for arg: name, type: string",
+          "required": true,
+          "default": null,
+          "options": null,
+          "options_from": null
+        },
+        {
+          "name": "boolean_val",
+          "type": null,
+          "description": "Input param for arg: boolean_val, type: string, Options: true, false",
+          "required": true,
+          "default": null,
+          "options": null,
+          "options_from": null
+        },
+        {
+          "name": "optional_str",
+          "type": null,
+          "description": "Input param for arg: optional_str, type: string",
+          "required": false,
+          "default": "sheeesh",
+          "options": null,
+          "options_from": null
+        }
+      ],
+      "env": [],
+      "secrets": [],
+      "dependencies": null,
+      "dependencies_url": null,
+      "openapi": null,
+      "with_files": [
+        {
+          "source": null,
+          "destination": "/tmp/main.py",
+          "content": "\nfrom typing_extensions import Annotated\n\nimport typer\n\ndef test_123(\n    name: str,\n    boolean_val: bool,  # This will validate that the input is a boolean\n    optional_str: Annotated[\n        str, typer.Argument()\n    ] = \"sheeesh\",  # This is how to add a default value\n):\n    import pandas as pd\n\n    print(f\"Hello {name}! {boolean_val} {optional_str}\")\n    df = pd.DataFrame(\n        {\"name\": [name], \"boolean_val\": [boolean_val], \"test\": [optional_str]}\n    )\n\n    print(df)\n\n\nif __name__ == \"__main__\":\n    typer.run(test_123)\n"
+        },
+        {
+          "source": null,
+          "destination": "/tmp/requirements.txt",
+          "content": "pandas==2.2.3\ntyper==0.12.5"
+        }
+      ],
+      "with_services": [],
+      "with_git_repo": null,
+      "with_volumes": [],
+      "entrypoint": [],
+      "icon_url": null,
+      "image": "python:3.12",
+      "long_running": false,
+      "on_start": null,
+      "on_complete": null,
+      "mermaid": "graph TD\n    %% Styles\n    classDef triggerClass fill:#3498db,color:#fff,stroke:#2980b9,stroke-width:2px,font-weight:bold\n    classDef paramClass fill:#2ecc71,color:#fff,stroke:#27ae60,stroke-width:2px\n    classDef execClass fill:#e74c3c,color:#fff,stroke:#c0392b,stroke-width:2px,font-weight:bold\n    classDef envClass fill:#f39c12,color:#fff,stroke:#f1c40f,stroke-width:2px\n\n    %% Main Components\n    Trigger(\"Trigger\"):::triggerClass\n    Params(\"Parameters\"):::paramClass\n    Exec(\"test_123\"):::execClass\n    Env(\"Environment\"):::envClass\n\n    %% Flow\n    Trigger --> Params --> Exec\n    Env --> Exec\n\n    %% Trigger Options\n    User(\"User\")\n    API(\"API\")\n    Webhook(\"Webhook\")\n    Cron(\"Scheduled\")\n    User --> Trigger\n    API --> Trigger\n    Webhook --> Trigger\n    Cron --> Trigger\n\n    %% Parameters\n    subgraph Parameters[\"Parameters\"]\n        direction TB\n        Param0(\"name (Required)<br/>Input param for arg: name, type: string\"):::paramClass\n        Param1(\"boolean_val (Required)<br/>Input param for arg: boolean_val, type: string, Options: true, false\"):::paramClass\n        Param2(\"optional_str (Optional)<br/>Input param for arg: optional_str, type: string<br/>Default: sheeesh\"):::paramClass\n    end\n    Parameters --- Params\n\n    %% Execution\n    subgraph Execution[\"Execution\"]\n        direction TB\n        Code(\"Script: <br/>curl -LsSf https://astral.sh/uv/install.sh | sh >...\")\n        Type(\"Type: Docker\")\n        Image(\"Docker Image: python:3.12\")\n    end\n    Execution --- Exec\n\n    %% Environment\n    subgraph Environment[\"Environment\"]\n        direction TB\n    end\n    Environment --- Env\n\n    %% Context Note\n    ContextNote(\"Parameter values can be<br/>fetched from context<br/>based on the trigger\")\n    ContextNote -.-> Params",
+      "workflow": false,
+      "metadata": {}
+    },
+    {
+      "name": "get_users",
+      "source": null,
+      "alias": null,
+      "description": "Print JSONPlace holder Users",
+      "type": "docker",
+      "content": "\ncurl -LsSf https://astral.sh/uv/install.sh | sh > /dev/null 2>&1\n. $HOME/.cargo/env\n\nuv venv > /dev/null 2>&1\n. .venv/bin/activate > /dev/null 2>&1\n\nuv pip install -r /tmp/requirements.txt > /dev/null 2>&1\n\npython /tmp/main.py \"{{ .start_of_name }}\"\n",
+      "content_url": null,
+      "args": [
+        {
+          "name": "start_of_name",
+          "type": null,
+          "description": "Input param for arg: start_of_name, type: string",
+          "required": false,
+          "default": null,
+          "options": null,
+          "options_from": null
+        }
+      ],
+      "env": [],
+      "secrets": [],
+      "dependencies": null,
+      "dependencies_url": null,
+      "openapi": null,
+      "with_files": [
+        {
+          "source": null,
+          "destination": "/tmp/main.py",
+          "content": "\nfrom typing_extensions import Annotated\n\nimport typer\n\ndef get_users(\n     start_of_name: Annotated[\n        str, typer.Argument()\n    ] = None,\n):\n    import requests\n\n    response = requests.get(\"https://jsonplaceholder.typicode.com/users\")\n    users = response.json()\n\n    for user in users:\n        if start_of_name and not user[\"name\"].startswith(start_of_name):\n            continue\n        print(user[\"name\"])\n        print(user[\"email\"])\n        print(user[\"address\"][\"city\"])\n        print()\n\n\nif __name__ == \"__main__\":\n    typer.run(get_users)\n"
+        },
+        {
+          "source": null,
+          "destination": "/tmp/requirements.txt",
+          "content": "requests==2.32.3\ntyper==0.12.5"
+        }
+      ],
+      "with_services": [],
+      "with_git_repo": null,
+      "with_volumes": [],
+      "entrypoint": [],
+      "icon_url": null,
+      "image": "python:3.12",
+      "long_running": false,
+      "on_start": null,
+      "on_complete": null,
+      "mermaid": "graph TD\n    %% Styles\n    classDef triggerClass fill:#3498db,color:#fff,stroke:#2980b9,stroke-width:2px,font-weight:bold\n    classDef paramClass fill:#2ecc71,color:#fff,stroke:#27ae60,stroke-width:2px\n    classDef execClass fill:#e74c3c,color:#fff,stroke:#c0392b,stroke-width:2px,font-weight:bold\n    classDef envClass fill:#f39c12,color:#fff,stroke:#f1c40f,stroke-width:2px\n\n    %% Main Components\n    Trigger(\"Trigger\"):::triggerClass\n    Params(\"Parameters\"):::paramClass\n    Exec(\"get_users\"):::execClass\n    Env(\"Environment\"):::envClass\n\n    %% Flow\n    Trigger --> Params --> Exec\n    Env --> Exec\n\n    %% Trigger Options\n    User(\"User\")\n    API(\"API\")\n    Webhook(\"Webhook\")\n    Cron(\"Scheduled\")\n    User --> Trigger\n    API --> Trigger\n    Webhook --> Trigger\n    Cron --> Trigger\n\n    %% Parameters\n    subgraph Parameters[\"Parameters\"]\n        direction TB\n        Param0(\"start_of_name (Optional)<br/>Input param for arg: start_of_name, type: string\"):::paramClass\n    end\n    Parameters --- Params\n\n    %% Execution\n    subgraph Execution[\"Execution\"]\n        direction TB\n        Code(\"Script: <br/>curl -LsSf https://astral.sh/uv/install.sh | sh >...\")\n        Type(\"Type: Docker\")\n        Image(\"Docker Image: python:3.12\")\n    end\n    Execution --- Exec\n\n    %% Environment\n    subgraph Environment[\"Environment\"]\n        direction TB\n    end\n    Environment --- Env\n\n    %% Context Note\n    ContextNote(\"Parameter values can be<br/>fetched from context<br/>based on the trigger\")\n    ContextNote -.-> Params",
+      "workflow": false,
+      "metadata": {}
+    },
+    {
+      "name": "say_hello",
+      "source": null,
+      "alias": null,
+      "description": "Prints hello {name}!",
+      "type": "docker",
+      "content": "\ncurl -LsSf https://astral.sh/uv/install.sh | sh > /dev/null 2>&1\n. $HOME/.cargo/env\n\nuv venv > /dev/null 2>&1\n. .venv/bin/activate > /dev/null 2>&1\n\nuv pip install -r /tmp/requirements.txt > /dev/null 2>&1\n\npython /tmp/main.py \"{{ .name }}\"\n",
+      "content_url": null,
+      "args": [
+        {
+          "name": "name",
+          "type": null,
+          "description": "name to say hello to",
+          "required": true,
+          "default": null,
+          "options": null,
+          "options_from": null
+        }
+      ],
+      "env": [],
+      "secrets": [],
+      "dependencies": null,
+      "dependencies_url": null,
+      "openapi": null,
+      "with_files": [
+        {
+          "source": null,
+          "destination": "/tmp/main.py",
+          "content": "import argparse\n\n\ndef hello_world(name: str):\n    print(f\"Hello, {name}!\")\n\n\nif __name__ == \"__main__\":\n    parser = argparse.ArgumentParser(description=\"Print hello {name}!\")\n    parser.add_argument(\"name\", help=\"Name to say hello to\")\n\n    # Parse command-line arguments\n    args = parser.parse_args()\n\n    # Get coordinates for the given city\n    name = args.name\n\n    hello_world(name)\n"
+        },
+        {
+          "source": null,
+          "destination": "/tmp/requirements.txt",
+          "content": ""
+        }
+      ],
+      "with_services": [],
+      "with_git_repo": null,
+      "with_volumes": [],
+      "entrypoint": [],
+      "icon_url": null,
+      "image": "python:3.12",
+      "long_running": false,
+      "on_start": null,
+      "on_complete": null,
+      "mermaid": "graph TD\n    %% Styles\n    classDef triggerClass fill:#3498db,color:#fff,stroke:#2980b9,stroke-width:2px,font-weight:bold\n    classDef paramClass fill:#2ecc71,color:#fff,stroke:#27ae60,stroke-width:2px\n    classDef execClass fill:#e74c3c,color:#fff,stroke:#c0392b,stroke-width:2px,font-weight:bold\n    classDef envClass fill:#f39c12,color:#fff,stroke:#f1c40f,stroke-width:2px\n\n    %% Main Components\n    Trigger(\"Trigger\"):::triggerClass\n    Params(\"Parameters\"):::paramClass\n    Exec(\"say_hello\"):::execClass\n    Env(\"Environment\"):::envClass\n\n    %% Flow\n    Trigger --> Params --> Exec\n    Env --> Exec\n\n    %% Trigger Options\n    User(\"User\")\n    API(\"API\")\n    Webhook(\"Webhook\")\n    Cron(\"Scheduled\")\n    User --> Trigger\n    API --> Trigger\n    Webhook --> Trigger\n    Cron --> Trigger\n\n    %% Parameters\n    subgraph Parameters[\"Parameters\"]\n        direction TB\n        Param0(\"name (Required)<br/>name to say hello to\"):::paramClass\n    end\n    Parameters --- Params\n\n    %% Execution\n    subgraph Execution[\"Execution\"]\n        direction TB\n        Code(\"Script: <br/>curl -LsSf https://astral.sh/uv/install.sh | sh >...\")\n        Type(\"Type: Docker\")\n        Image(\"Docker Image: python:3.12\")\n    end\n    Execution --- Exec\n\n    %% Environment\n    subgraph Environment[\"Environment\"]\n        direction TB\n    end\n    Environment --- Env\n\n    %% Context Note\n    ContextNote(\"Parameter values can be<br/>fetched from context<br/>based on the trigger\")\n    ContextNote -.-> Params",
+      "workflow": false,
+      "metadata": {}
+    }
+  ],
+  "errors": [],
+  "python_bundle_version": "3.12.0"
+}
